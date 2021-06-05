@@ -1,6 +1,8 @@
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
 
-export const httpClient = axios.create({
+export let httpClient: AxiosInstance;
+
+httpClient = axios.create({
   baseURL: "http://localhost:8080",
   withCredentials: true,
   method: "post",

@@ -1,4 +1,11 @@
-import { Box, Button, Flex, Heading, Stack, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Heading,
+  Stack,
+  Text,
+  useEventListener,
+} from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import { useHttpClient } from "../utils/useHttpClient";
@@ -20,13 +27,24 @@ const Index = () => {
     url: "/post/pageQuery",
     data: {
       page: _page,
-      pageSize: 10,
+      pageSize: 20,
     },
   });
 
   useEffect(() => {
     setDataPerPage((d) => d.concat(data?.list));
   }, [data]);
+
+  let loadMore = () => {
+    if (
+      window.innerHeight + document.documentElement.scrollTop + 5 >=
+      document.scrollingElement!.scrollHeight
+    ) {
+      setPage((p) => p + 1);
+    }
+  };
+
+  useEventListener("scroll", loadMore);
 
   return (
     <Layout>
@@ -46,19 +64,13 @@ const Index = () => {
           )}
         </Stack>
       )}
-      {data && data.hasMore ? (
+      {data && data.hasMore ? null : (
         <Flex>
-          <Button
-            colorScheme="teal"
-            size="md"
-            m="auto"
-            my={8}
-            onClick={() => setPage((p) => p + 1)}
-          >
-            Load More
-          </Button>
+          <Text fontSize="lg" m="auto" my={8}>
+            No More
+          </Text>
         </Flex>
-      ) : null}
+      )}
     </Layout>
   );
 };

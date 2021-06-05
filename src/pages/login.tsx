@@ -1,5 +1,5 @@
 import { Box, Button, Flex, useToast } from "@chakra-ui/react";
-import { Formik, Form } from "formik";
+import { Formik, Form, FormikValues } from "formik";
 import { useRouter } from "next/dist/client/router";
 import React from "react";
 import { InputField } from "../components/InputField";
@@ -12,24 +12,27 @@ interface LoginProps {}
 export const Login: React.FC<LoginProps> = ({}) => {
   const toast = useToast();
   const router = useRouter();
-  const [_, login] = useHttpClient({ url: "/user/login" }, { manual: true });
+  const [, login] = useHttpClient({ url: "/user/login" }, { manual: true });
+
+  let loginOnSubmit = async function (values: FormikValues) {
+    await login({ data: values })
+      .then(function () {
+        router.push("/");
+      })
+      .catch(function (err: AxiosError) {
+        toast({
+          title: "Login Failed",
+          description: err.response?.data.errorMsg,
+          isClosable: true,
+        });
+      });
+  };
+
   return (
     <Wrapper variant="small">
       <Formik
         initialValues={{ email: "", username: "", password: "" }}
-        onSubmit={async (values) => {
-          await login({ data: values })
-            .then(function () {
-              router.push("/");
-            })
-            .catch(function (err: AxiosError) {
-              toast({
-                title: "Login Failed",
-                description: err.response?.data.msg,
-                isClosable: true,
-              });
-            });
-        }}
+        onSubmit={loginOnSubmit}
       >
         {({ isSubmitting }) => (
           <Form>
@@ -39,14 +42,14 @@ export const Login: React.FC<LoginProps> = ({}) => {
                 placeholder="email"
                 label="Email"
                 type="email"
-              ></InputField>
+              />
               <Box mt={4}>
                 <InputField
                   name="password"
                   placeholder="password"
                   label="Password"
                   type="password"
-                ></InputField>
+                />
               </Box>
               <Button
                 type="submit"

@@ -1,6 +1,8 @@
-import { makeUseAxios } from "axios-hooks";
+import { makeUseAxios, UseAxios } from "axios-hooks";
 import { httpClient } from "./httpClient";
 
-export const useHttpClient = makeUseAxios({
+export let useHttpClient: UseAxios;
+
+useHttpClient = makeUseAxios({
   axios: httpClient,
 });
