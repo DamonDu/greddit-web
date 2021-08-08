@@ -1,15 +1,6 @@
 import React from "react";
 import Layout from "../components/Layout";
-import {
-  Box,
-  Button,
-  Flex,
-  FormControl,
-  FormLabel,
-  Heading,
-  Textarea,
-  useToast,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, useToast } from "@chakra-ui/react";
 import "draft-js/dist/Draft.css";
 import { Form, Formik, FormikValues } from "formik";
 import { InputField } from "../components/InputField";
@@ -30,7 +21,7 @@ export const Submit: React.FC<SubmitProps> = ({}) => {
   let registerOnSubmit = async function (values: FormikValues) {
     await postCreate({ data: values })
       .then(function () {
-        router.push("/");
+        router.push("/").then(router.reload);
       })
       .catch(function (err: AxiosError) {
         toast({
@@ -60,10 +51,12 @@ export const Submit: React.FC<SubmitProps> = ({}) => {
                     type="text"
                   />
                   <Box mt={4}>
-                    <FormControl>
-                      <FormLabel htmlFor="text"> Content </FormLabel>
-                      <Textarea id="text" type="text" placeholder="content" />
-                    </FormControl>
+                    <InputField
+                      name="text"
+                      placeholder="content"
+                      label="Content"
+                      type="text"
+                    />
                   </Box>
                   <Button
                     type="submit"
