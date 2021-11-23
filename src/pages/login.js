@@ -14,7 +14,10 @@ function login() {
   const [, login] = useHttpClient({ url: "/user/login" }, { manual: true });
   const onSubmit = (value) =>
     login({ data: value })
-      .then(() => router.push("/"))
+      .then((res) => {
+        localStorage.setItem("token", res?.data.token);
+        router.push("/");
+      })
       .catch((err) => {
         alert(err.response?.data.msg);
       });

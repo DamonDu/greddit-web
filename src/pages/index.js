@@ -7,6 +7,7 @@ import useEventListener from "@use-it/event-listener";
 export default function index() {
   const [pageNum, setPageNum] = useState(1);
   const [{ data, loading }] = useHttpClient({
+    method: "POST",
     url: "/post/pageQuery",
     data: {
       page: pageNum,
