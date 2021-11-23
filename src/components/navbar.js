@@ -9,7 +9,11 @@ function Navbar() {
   );
   const router = useRouter();
   const [, logout] = useHttpClient({ url: "/user/logout" }, { manual: true });
-  const logoutOnSubmit = () => logout().then(() => router.reload());
+  const logoutOnSubmit = () =>
+    logout().then(() => {
+      localStorage.removeItem("token");
+      router.reload();
+    });
   return (
     <header className="bg-white border-b lg:fixed lg:w-full lg:top-0 lg:left-0 lg:z-40">
       <div className="container px-4 py-5 mx-auto space-y-4 lg:space-y-0 lg:flex lg:items-center lg:justify-between lg:space-x-10">
